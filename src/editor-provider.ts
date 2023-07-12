@@ -29,9 +29,12 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
         });
 
         const provider = new YamlEditorProvider(context);
+        // use 'retainContextWhenHidden' as other persistence option (i.e., getState/setState) did not work
+        // see https://code.visualstudio.com/api/extension-guides/webview#persistence for more context
         const providerRegistration = vscode.window.registerCustomEditorProvider(
             YamlEditorProvider.viewType,
-            provider
+            provider,
+            { webviewOptions: { retainContextWhenHidden: true } }
         );
         return providerRegistration;
     }
@@ -78,10 +81,6 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
             switch (e.type) {
                 case 'updateDocument':
                     this.updateYamlDocument(document, e.text);
-                    webviewPanel.webview.postMessage({
-                        type: 'update',
-                        text: e.text
-                    });
                     break;
             }
         });

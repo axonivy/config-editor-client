@@ -136,7 +136,6 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                 variableKey
             ];
             props.vscodeApi.postMessage({ type: 'updateDocument', text: YAML.stringify(tmpYaml) });
-            setYaml(tmpYaml);
         }
     }
 
@@ -201,6 +200,5 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
             type: 'updateDocument',
             text: YAML.stringify(newYamlDocument)
         });
-        setYaml(newYamlDocument);
     }
 }
