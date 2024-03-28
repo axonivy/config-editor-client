@@ -20,8 +20,8 @@ export const Variables = ({ variables }: VariablesProps) => {
   const expanded = useTableExpand<Variable>();
   const columns: ColumnDef<Variable, string>[] = [
     {
-      accessorKey: 'key',
-      header: header => <ExpandableHeader name='Key' header={header} />,
+      accessorKey: 'name',
+      header: header => <ExpandableHeader name='Name' header={header} />,
       cell: cell => <ExpandableCell cell={cell} icon={cell.row.getCanExpand() ? IvyIcons.FolderOpen : IvyIcons.Note} />,
       minSize: 50
     },

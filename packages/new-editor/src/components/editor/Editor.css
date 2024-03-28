@@ -7,6 +7,6 @@
   border-bottom: none;
 }
 
-.master-content {
-  margin-inline: var(--size-3);
+.content {
+  margin: var(--size-3);
 }
