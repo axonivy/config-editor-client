@@ -1,14 +1,14 @@
 import { Flex, ResizableHandle, ResizablePanel, ResizablePanelGroup, SidebarHeader, Toolbar, ToolbarTitle } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
+import { useState } from 'react';
 import './Editor.css';
-import { Metadata } from './data/Variable';
+import { Metadata, type Variable } from './data/Variable';
 import { VariableDetail } from './variables/detail/Variable';
 import { Variables } from './variables/master/Variables';
 
 export const Editor = () => {
-  // TODO: Variables coming from context
-  const masterTitle = 'Variables Editor';
-  const detailTitle = 'Variables Editor - appId';
+  // TODO: Variables coming from context and choosing corresponding master and detail content components
+  const title = 'Variables Editor';
   const variables = [
     {
       name: 'microsoft-connector',
@@ -72,27 +72,33 @@ export const Editor = () => {
     }
   ];
 
+  const [selectedVariable, setSelectedVariable] = useState(undefined);
+
   return (
     <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
       <ResizablePanel defaultSize={75} minSize={50} className='master-panel'>
         <Flex direction='column'>
           <Toolbar className='master-toolbar'>
-            <ToolbarTitle>{masterTitle}</ToolbarTitle>
+            <ToolbarTitle>{title}</ToolbarTitle>
           </Toolbar>
           <Flex direction='column' gap={4} className='content'>
-            <Variables variables={variables} />
+            <Variables variables={variables} onSelection={setSelectedVariable} />
           </Flex>
         </Flex>
       </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel defaultSize={25} minSize={10}>
-        <Flex direction='column'>
-          <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} />
-          <Flex direction='column' gap={4} className='content'>
-            <VariableDetail variable={variables[0].children[1]} />
-          </Flex>
-        </Flex>
-      </ResizablePanel>
+      {selectedVariable && (
+        <>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={25} minSize={10}>
+            <Flex direction='column'>
+              <SidebarHeader icon={IvyIcons.PenEdit} title={title + ' - ' + (selectedVariable as Variable).name} />
+              <Flex direction='column' gap={4} className='content'>
+                <VariableDetail variable={selectedVariable} />
+              </Flex>
+            </Flex>
+          </ResizablePanel>
+        </>
+      )}
     </ResizablePanelGroup>
   );
 };
