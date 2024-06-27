@@ -22,6 +22,7 @@ import { type Variable } from '../data/variable';
 import { variableIcon } from '../data/variable-utils';
 import { ValidationRow } from './ValidationRow';
 import './VariablesMaster.css';
+import { OverwriteDialog } from './OverwriteDialog';
 
 type VariablesProps = {
   variables: Array<Variable>;
@@ -97,6 +98,7 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
   if (!readonly) {
     controls.push(
       <Button key='addButton' icon={IvyIcons.Plus} onClick={addVariable} aria-label='Add variable' />,
+      <OverwriteDialog />,
       <Button
         key='deleteButton'
         icon={IvyIcons.Trash}
