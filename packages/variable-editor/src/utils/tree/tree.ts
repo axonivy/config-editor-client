@@ -104,19 +104,27 @@ export const treeGlobalFilter = <TNode extends TreeNode<TNode>>(data: Array<TNod
 };
 
 export const keyOfFirstSelectedNonLeafRow = <TNode extends TreeNode<TNode>>(table: Table<TNode>) => {
+  const row = firstSelectedNonLeafRow(table);
+  if (row) {
+    return keyOfRow(row);
+  }
+  return '';
+};
+
+const firstSelectedNonLeafRow = <TNode extends TreeNode<TNode>>(table: Table<TNode>) => {
   const selectedRow = getFirstSelectedRow(table);
   if (!selectedRow) {
-    return '';
+    return;
   }
   if (hasChildren(selectedRow)) {
-    return keyOfRow(selectedRow);
+    return selectedRow;
   }
 
   const parentRow = selectedRow.getParentRow();
-  if (parentRow) {
-    return keyOfRow(parentRow);
+  if (!parentRow) {
+    return;
   }
-  return '';
+  return parentRow;
 };
 
 export const keysOfAllNonLeafRows = <TNode extends TreeNode<TNode>>(table: Table<TNode>) => {
