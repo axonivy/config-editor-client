@@ -90,7 +90,7 @@ test.describe('VariableEditor', () => {
     await tree.row(5).click();
     await tree.row(5).expectValues(['useUserPassFlow', '']);
     await editor.add.open();
-    await editor.add.expectValues('', 'microsoft-connector.useUserPassFlow', 'microsoft-connector', 'microsoft-connector.useUserPassFlow');
+    await editor.add.expectValues('NewVariable', 'microsoft-connector.useUserPassFlow', 'microsoft-connector', 'microsoft-connector.useUserPassFlow');
   });
 
   test('collapse', async () => {
