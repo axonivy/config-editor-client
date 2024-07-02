@@ -8,6 +8,7 @@ import {
   keyOfFirstSelectedNonLeafRow,
   keyOfRow,
   keysOfAllNonLeafRows,
+  subRowsOfFirstSelectedNonLeafRow,
   treeGlobalFilter
 } from './tree';
 
@@ -250,6 +251,28 @@ describe('tree', () => {
 
     test('withParents', () => {
       expect(keyOfRow(table.getRowModel().rows[1].getLeafRows()[1].getLeafRows()[0])).toEqual('NameNode1.NameNode1.1.NameNode1.1.0');
+    });
+  });
+
+  describe('subRowsOfFirstSelectedNonLeafRow', () => {
+    test('noSelection', () => {
+      table.getState().rowSelection = {};
+      expect(subRowsOfFirstSelectedNonLeafRow(table)).toEqual(table.getRowModel().rows);
+    });
+
+    test('folderSelection', () => {
+      table.getState().rowSelection = { '1.1': true };
+      expect(subRowsOfFirstSelectedNonLeafRow(table)).toEqual(table.getRowModel().rows[1].subRows[1].subRows);
+    });
+
+    test('rootLeafSelection', () => {
+      table.getState().rowSelection = { '0': true };
+      expect(subRowsOfFirstSelectedNonLeafRow(table)).toEqual(table.getRowModel().rows);
+    });
+
+    test('leafSelection', () => {
+      table.getState().rowSelection = { '1.1.0.0': true };
+      expect(subRowsOfFirstSelectedNonLeafRow(table)).toEqual(table.getRowModel().rows[1].subRows[1].subRows[0].subRows);
     });
   });
 

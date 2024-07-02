@@ -106,7 +106,7 @@ export const treeGlobalFilter = <TNode extends TreeNode<TNode>>(data: Array<TNod
 export const subRowsOfFirstSelectedNonLeafRow = <TNode extends TreeNode<TNode>>(table: Table<TNode>) => {
   const row = firstSelectedNonLeafRow(table);
   if (!row) {
-    return [];
+    return table.getRowModel().rows;
   }
   return row.subRows;
 };
