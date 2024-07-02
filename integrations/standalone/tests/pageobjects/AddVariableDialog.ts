@@ -20,6 +20,14 @@ export class AddVariableDialog {
     await this.add.click();
   }
 
+  async fillName(name: string) {
+    await this.name.fill(name);
+  }
+
+  async fillNamespace(namespace: string) {
+    await this.namespace.fill(namespace);
+  }
+
   async expectValues(name: string, namespaceValue: string, ...namespaceOptions: Array<string>) {
     await this.name.expectValue(name);
     await this.namespace.expectValue(namespaceValue);

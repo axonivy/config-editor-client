@@ -65,8 +65,19 @@ export class VariableEditor {
     await this.page.addStyleTag({ content: `.tsqd-parent-container { display: none; }` });
   }
 
-  async addVariable() {
-    this.add.open();
-    this.add.createVariable();
+  async addVariable(name?: string, namespace?: string) {
+    await this.add.open();
+    if (name) {
+      await this.add.fillName(name);
+    }
+    if (namespace) {
+      await this.add.fillNamespace(namespace);
+    }
+    await this.add.createVariable();
+
+    // TODO: Remove once create button functionality is implemented
+    if (name) {
+      await this.details.name.fill(name);
+    }
   }
 }
