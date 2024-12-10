@@ -1,16 +1,19 @@
-import { BasicField, Flex, BasicInput, PanelMessage, Textarea } from '@axonivy/ui-components';
+import { BasicField, BasicInput, Flex, PanelMessage, Textarea } from '@axonivy/ui-components';
+import { EMPTY_PROJECT_VAR_NODE } from '@axonivy/variable-editor-protocol';
+import { useMemo } from 'react';
 import { useAppContext } from '../../../context/AppContext';
+import { useMeta } from '../../../context/useMeta';
 import { getNode, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
 import { type VariableUpdates } from '../data/variable';
+import './DetailContent.css';
 import { Metadata } from './Metadata';
 import { Value } from './Value';
-import './DetailContent.css';
-import { useMemo } from 'react';
 
 export const VariablesDetailContent = () => {
-  const { variables, setVariables, selectedVariable } = useAppContext();
+  const { context, variables, setVariables, selectedVariable } = useAppContext();
 
   const variable = useMemo(() => getNode(variables, selectedVariable), [variables, selectedVariable]);
+  const knownVariables = useMeta('meta/knownVariables', context, EMPTY_PROJECT_VAR_NODE).data;
   if (!variable) {
     return <PanelMessage message='Select a variable to edit its properties.' />;
   }
