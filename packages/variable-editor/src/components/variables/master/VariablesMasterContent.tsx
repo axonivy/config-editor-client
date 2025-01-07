@@ -11,10 +11,11 @@ import {
   TableResizableHeader,
   useReadonly,
   useTableExpand,
+  useTableKeyHandler,
   useTableSelect
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
-import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
+import { getCoreRowModel, useReactTable, type ColumnDef, type Table as TanstackTable } from '@tanstack/react-table';
 import { useAppContext } from '../../../context/AppContext';
 import { deleteFirstSelectedRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
 import { type Variable } from '../data/variable';
@@ -23,9 +24,21 @@ import { AddVariableDialog } from '../dialog/AddDialog';
 import { OverwriteDialog } from '../dialog/OverwriteDialog';
 import { ValidationRow } from './ValidationRow';
 import './VariablesMasterContent.css';
+import { useEffect } from 'react';
+
+const useUpdateSelection = (table: TanstackTable<Variable>) => {
+  const { setSelectedVariable } = useAppContext();
+  const selectedRows = table.getSelectedRowModel().flatRows;
+  const selectedVariable = selectedRows.length === 1 ? selectedRows[0].id : undefined;
+  useEffect(() => {
+    if (selectedVariable) {
+      setSelectedVariable(selectedVariable.split('.').map(Number));
+    }
+  }, [selectedRows, selectedVariable, setSelectedVariable]);
+};
 
 export const VariablesMasterContent = () => {
-  const { variables, setVariables, setSelectedVariable } = useAppContext();
+  const { variables, setVariables, setSelectedVariable, detail, setDetail } = useAppContext();
 
   const selection = useTableSelect<Variable>();
   const expanded = useTableExpand<Variable>();
@@ -55,6 +68,11 @@ export const VariablesMasterContent = () => {
       ...expanded.tableState,
       ...globalFilter.tableState
     }
+  });
+  useUpdateSelection(table);
+  const { handleKeyDown } = useTableKeyHandler({
+    table,
+    data: variables
   });
 
   const deleteVariable = () =>
@@ -89,7 +107,7 @@ export const VariablesMasterContent = () => {
     <Flex direction='column' className='master-content-container' onClick={resetSelection}>
       <BasicField className='master-content' label='List of variables' control={control} onClick={event => event.stopPropagation()}>
         {globalFilter.filter}
-        <Table>
+        <Table onKeyDown={e => handleKeyDown(e, () => setDetail(!detail))}>
           <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
           <TableBody>
             {table.getRowModel().rows.map(row => (
