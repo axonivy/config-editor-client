@@ -14,7 +14,7 @@ type OverwriteProps = {
 };
 
 export const OverwriteDialog = ({ table }: OverwriteProps) => {
-  const { setVariables } = useAppContext();
+  const { setVariables, setSelectedVariable } = useAppContext();
 
   const insertVariable = (node?: KnownVariables): void => {
     if (!node) {
@@ -23,6 +23,7 @@ export const OverwriteDialog = ({ table }: OverwriteProps) => {
     setVariables(old => {
       const addNodeReturnValue = addKnownVariable(old, node);
       selectRow(table, toRowId(addNodeReturnValue.newNodePath));
+      setSelectedVariable(addNodeReturnValue.newNodePath);
       return addNodeReturnValue.newData;
     });
   };
