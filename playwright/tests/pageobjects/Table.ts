@@ -4,14 +4,14 @@ import { Button } from './Button';
 import { Message } from './Message';
 
 export class Table {
+  readonly locator: Locator;
   private readonly rows: Locator;
   private readonly header: Locator;
-  private readonly locator: Locator;
   readonly messages: Locator;
 
   constructor(readonly page: Page, parentLocator: Locator, readonly columns: ColumnType[], label?: string) {
     if (label === undefined) {
-      this.locator = parentLocator;
+      this.locator = parentLocator.locator('table');
     } else {
       this.locator = parentLocator.getByLabel(label);
     }
@@ -26,10 +26,6 @@ export class Table {
 
   cell(row: number, column: number) {
     return this.row(row).column(column);
-  }
-
-  async focus() {
-    await this.locator.locator('table').focus();
   }
 
   async expectEmpty() {

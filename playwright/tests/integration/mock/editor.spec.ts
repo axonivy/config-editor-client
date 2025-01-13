@@ -149,7 +149,7 @@ test.describe('addVariableDialogValidation', () => {
 test.describe('table keyboard support', () => {
   test('move single selection via arrowKey', async () => {
     await editor.tree.expectToHaveNothingSelected();
-    await editor.tree.focus();
+    await editor.tree.locator.focus();
     await editor.page.keyboard.press('ArrowDown');
     await editor.page.keyboard.press('ArrowDown');
     await editor.tree.expectToBeSelected(1);
@@ -161,7 +161,7 @@ test.describe('table keyboard support', () => {
 
   test('open/close children via arrowKey', async () => {
     await editor.tree.expectToHaveNothingSelected();
-    await editor.tree.focus();
+    await editor.tree.locator.focus();
     await editor.page.keyboard.press('ArrowDown');
     await editor.tree.expectRowCount(11);
     await editor.page.keyboard.press('ArrowLeft');
@@ -173,7 +173,7 @@ test.describe('table keyboard support', () => {
   test('open/close detail via enter', async () => {
     await editor.tree.expectToHaveNothingSelected();
     await expect(editor.details.locator).toBeVisible();
-    await editor.tree.focus();
+    await editor.tree.locator.focus();
     await editor.page.keyboard.press('ArrowDown');
     await editor.page.keyboard.press('Enter');
     await expect(editor.details.locator).toBeHidden();

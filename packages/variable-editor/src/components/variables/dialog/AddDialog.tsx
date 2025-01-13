@@ -33,7 +33,7 @@ type AddVariableDialogProps = {
 };
 
 export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
-  const { context, variables, setVariables, setSelectedVariable } = useAppContext();
+  const { context, variables, setVariables } = useAppContext();
 
   const [name, setName] = useState('');
   const [namespace, setNamespace] = useState('');
@@ -55,7 +55,6 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
 
   const updateSelection = (addNodeReturnValue: AddNodeReturnType<Variable>) => {
     selectRow(table, toRowId(addNodeReturnValue.newNodePath));
-    setSelectedVariable(addNodeReturnValue.newNodePath);
   };
 
   const addKnown = (knownVariable: KnownVariables) => {

@@ -15,32 +15,26 @@ import {
   useTableSelect
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
-import { getCoreRowModel, useReactTable, type ColumnDef, type Table as TanstackTable } from '@tanstack/react-table';
+import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import { useAppContext } from '../../../context/AppContext';
-import { deleteFirstSelectedRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
+import { deleteFirstSelectedRow, toTreePath, useTreeGlobalFilter } from '../../../utils/tree/tree';
 import { type Variable } from '../data/variable';
 import { variableIcon } from '../data/variable-utils';
 import { AddVariableDialog } from '../dialog/AddDialog';
 import { OverwriteDialog } from '../dialog/OverwriteDialog';
 import { ValidationRow } from './ValidationRow';
 import './VariablesMasterContent.css';
-import { useEffect } from 'react';
-
-const useUpdateSelection = (table: TanstackTable<Variable>) => {
-  const { setSelectedVariable } = useAppContext();
-  const selectedRows = table.getSelectedRowModel().flatRows;
-  const selectedVariable = selectedRows.length === 1 ? selectedRows[0].id : undefined;
-  useEffect(() => {
-    if (selectedVariable) {
-      setSelectedVariable(selectedVariable.split('.').map(Number));
-    }
-  }, [selectedRows, selectedVariable, setSelectedVariable]);
-};
 
 export const VariablesMasterContent = () => {
   const { variables, setVariables, setSelectedVariable, detail, setDetail } = useAppContext();
 
-  const selection = useTableSelect<Variable>();
+  const selection = useTableSelect<Variable>({
+    onSelect: selectedRows => {
+      const selectedRowId = Object.keys(selectedRows).find(key => selectedRows[key]);
+      const selectedVariable = table.getRowModel().flatRows.find(row => row.id === selectedRowId)?.id;
+      setSelectedVariable(selectedVariable ? toTreePath(selectedVariable) : []);
+    }
+  });
   const expanded = useTableExpand<Variable>();
   const globalFilter = useTreeGlobalFilter(variables);
   const columns: Array<ColumnDef<Variable, string>> = [
@@ -69,7 +63,7 @@ export const VariablesMasterContent = () => {
       ...globalFilter.tableState
     }
   });
-  useUpdateSelection(table);
+
   const { handleKeyDown } = useTableKeyHandler({
     table,
     data: variables
@@ -78,13 +72,11 @@ export const VariablesMasterContent = () => {
   const deleteVariable = () =>
     setVariables(old => {
       const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, old);
-      setSelectedVariable(deleteFirstSelectedRowReturnValue.selectedPath);
       return deleteFirstSelectedRowReturnValue.newData;
     });
 
   const resetSelection = () => {
     selectRow(table);
-    setSelectedVariable([]);
   };
 
   const readonly = useReadonly();
