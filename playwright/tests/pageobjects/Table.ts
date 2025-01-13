@@ -4,14 +4,14 @@ import { Button } from './Button';
 import { Message } from './Message';
 
 export class Table {
+  readonly locator: Locator;
   private readonly rows: Locator;
   private readonly header: Locator;
-  private readonly locator: Locator;
   readonly messages: Locator;
 
   constructor(readonly page: Page, parentLocator: Locator, readonly columns: ColumnType[], label?: string) {
     if (label === undefined) {
-      this.locator = parentLocator;
+      this.locator = parentLocator.locator('table');
     } else {
       this.locator = parentLocator.getByLabel(label);
     }
@@ -38,6 +38,17 @@ export class Table {
 
   async expectRowCount(rows: number) {
     await expect(this.rows).toHaveCount(rows);
+  }
+
+  async expectToBeSelected(...indexes: Array<number>) {
+    for (let i = 0; i < indexes.length; i++) {
+      await this.row(indexes[i]).expectSelected();
+    }
+  }
+  async expectToHaveNothingSelected() {
+    for (let i = 0; i < (await this.rows.count()); i++) {
+      await this.row(i).expectNotSelected();
+    }
   }
 
   async rowCount() {
