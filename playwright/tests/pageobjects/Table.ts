@@ -3,25 +3,28 @@ import { expect } from '@playwright/test';
 import { Button } from './Button';
 import { Message } from './Message';
 
+const ROW_LOCATOR = 'tbody tr:not(.ui-message-row)';
+const ROW_SELECTION_ATTR = 'data-state';
+const ROW_SELECTED = 'selected';
+
 export class Table {
   readonly locator: Locator;
   private readonly rows: Locator;
-  private readonly header: Locator;
   readonly messages: Locator;
 
-  constructor(readonly page: Page, parentLocator: Locator, readonly columns: ColumnType[], label?: string) {
-    if (label === undefined) {
-      this.locator = parentLocator.locator('table');
-    } else {
-      this.locator = parentLocator.getByLabel(label);
-    }
-    this.rows = this.locator.locator('tbody tr:not(.ui-message-row)');
+  constructor(
+    readonly page: Page,
+    parentLocator: Locator,
+    readonly columns: ColumnType[],
+    readonly options?: { virtualized?: boolean }
+  ) {
+    this.locator = parentLocator.locator('table');
+    this.rows = this.locator.locator(ROW_LOCATOR);
     this.messages = this.locator.locator('tbody tr.ui-message-row');
-    this.header = this.locator.locator('thead tr');
   }
 
-  row(row: number) {
-    return new Row(this.page, this.rows, this.header, row, this.columns);
+  row(index: number) {
+    return new Row(this.page, this.locator, index, this.columns, this.options?.virtualized);
   }
 
   cell(row: number, column: number) {
@@ -46,9 +49,7 @@ export class Table {
     }
   }
   async expectToHaveNothingSelected() {
-    for (let i = 0; i < (await this.rows.count()); i++) {
-      await this.row(i).expectNotSelected();
-    }
+    await expect(this.locator.locator(`${ROW_LOCATOR}[${ROW_SELECTION_ATTR}="${ROW_SELECTED}"]`)).toHaveCount(0);
   }
 
   async rowCount() {
@@ -64,11 +65,19 @@ export type ColumnType = 'label' | 'text';
 
 export class Row {
   public readonly locator: Locator;
-  public readonly header: Locator;
 
-  constructor(readonly page: Page, rowsLocator: Locator, headerLocator: Locator, row: number, readonly columns: ColumnType[]) {
-    this.locator = rowsLocator.nth(row);
-    this.header = headerLocator.nth(0);
+  constructor(
+    readonly page: Page,
+    readonly parentLocator: Locator,
+    readonly index: number,
+    readonly columns: ColumnType[],
+    virtualized?: boolean
+  ) {
+    if (virtualized) {
+      this.locator = this.parentLocator.locator(`${ROW_LOCATOR}[data-vindex="${index}"]`);
+    } else {
+      this.locator = this.parentLocator.locator(ROW_LOCATOR).nth(index);
+    }
   }
 
   async fill(values: string[]) {
@@ -108,11 +117,11 @@ export class Row {
   }
 
   async expectSelected() {
-    await expect(this.locator).toHaveAttribute('data-state', 'selected');
+    await expect(this.locator).toHaveAttribute(ROW_SELECTION_ATTR, ROW_SELECTED);
   }
 
   async expectNotSelected() {
-    await expect(this.locator).not.toHaveAttribute('data-state', 'selected');
+    await expect(this.locator).not.toHaveAttribute(ROW_SELECTION_ATTR, ROW_SELECTED);
   }
 
   async expectCollapsed() {
@@ -143,7 +152,12 @@ export class Cell {
   private readonly collapseBtn: Button;
   private readonly expandBtn: Button;
 
-  constructor(readonly page: Page, rowLocator: Locator, column: number, readonly columnType: ColumnType) {
+  constructor(
+    readonly page: Page,
+    rowLocator: Locator,
+    column: number,
+    readonly columnType: ColumnType
+  ) {
     this.locator = rowLocator.getByRole('cell').nth(column);
     this.textbox = this.locator.getByRole('textbox');
     this.collapseBtn = new Button(this.locator, { name: 'Collapse row' });

@@ -20,6 +20,7 @@ export const ValidationRow = ({ row, virtualRow }: ValidationRowProps) => {
         style={{
           transform: `translateY(${virtualRow.start}px)`
         }}
+        vindex={virtualRow.index}
       >
         {row.getVisibleCells().map(cell => (
           <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
