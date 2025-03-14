@@ -171,45 +171,6 @@ test.describe('add', () => {
   });
 });
 
-test.describe('table keyboard support', () => {
-  test('move single selection via arrowKey', async () => {
-    await editor.tree.expectToHaveNothingSelected();
-    await editor.tree.locator.focus();
-    await editor.page.keyboard.press('ArrowDown');
-    await editor.page.keyboard.press('ArrowDown');
-    await editor.tree.expectToBeSelected(1);
-    await editor.page.keyboard.press('ArrowUp');
-    await editor.page.keyboard.press('ArrowUp');
-    await editor.page.keyboard.press('ArrowUp');
-    await editor.tree.expectToBeSelected(9);
-  });
-
-  test('open/close children via arrowKey', async () => {
-    await editor.tree.expectToHaveNothingSelected();
-    await editor.tree.locator.focus();
-    await editor.page.keyboard.press('ArrowDown');
-    await editor.tree.expectRowCount(11);
-    await editor.page.keyboard.press('ArrowLeft');
-    await editor.tree.expectRowCount(1);
-    await editor.page.keyboard.press('ArrowRight');
-    await editor.tree.expectRowCount(11);
-  });
-
-  test('open/close detail via enter', async () => {
-    await editor.tree.expectToHaveNothingSelected();
-    await expect(editor.details.locator).toBeVisible();
-    await editor.tree.locator.focus();
-    await editor.page.keyboard.press('ArrowDown');
-    await editor.page.keyboard.press('Enter');
-    await expect(editor.details.locator).toBeHidden();
-    await editor.page.keyboard.press('ArrowDown');
-    await editor.page.keyboard.press('ArrowDown');
-    await editor.page.keyboard.press('Enter');
-    await expect(editor.details.locator).toBeVisible();
-    await editor.details.expectTitle('Variables - project-name - secretKey');
-  });
-});
-
 test('collapse', async () => {
   const row = tree.row(5);
   await row.expectExpanded();

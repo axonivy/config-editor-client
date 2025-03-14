@@ -27,7 +27,7 @@ export class VariableEditor {
     this.masterPanel = this.locator.locator('.variables-editor-main-panel');
     this.toolbar = new Toolbar(page, this.masterPanel);
     this.search = new TextArea(this.locator);
-    this.tree = new Table(page, this.locator, ['label', 'label']);
+    this.tree = new Table(page, this.locator, ['label', 'label'], { virtualized: true });
     this.delete = new Button(this.locator, { name: 'Delete variable' });
     this.add = new AddVariableDialog(page, this.locator);
     this.overwrite = new OverwriteDialog(page, this.locator);
@@ -47,8 +47,15 @@ export class VariableEditor {
     return this.openUrl(page, url);
   }
 
-  static async openMock(page: Page) {
-    return this.openUrl(page, '/mock.html');
+  static async openMock(page: Page, options?: { virtualize?: boolean }) {
+    let url = 'mock.html';
+    if (options) {
+      url += '?';
+      if (options.virtualize) {
+        url += `virtualize=${options.virtualize}&`;
+      }
+    }
+    return this.openUrl(page, url);
   }
 
   private static params(options: Record<string, string | boolean>) {
