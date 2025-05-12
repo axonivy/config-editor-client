@@ -69,14 +69,14 @@ test('toNodes', () => {
   expect(nodes).toHaveLength(1);
   const root = nodes[0];
   expect(root).toMatchObject({ value: 'Amazon', icon: 'folder-open', info: '' });
-  expect(root.children).toHaveLength(1);
-  const node = root.children[0];
+  expect(root?.children).toHaveLength(1);
+  const node = root?.children[0];
   expect(node).toMatchObject({ value: 'Comprehend', icon: 'folder-open', info: 'Amazon comprehend connector settings' });
-  expect(node.children).toHaveLength(4);
-  expect(node.children[0]).toMatchObject({ value: 'SecretKey', icon: 'password', info: 'Secret key to access amazon comprehend' });
-  expect(node.children[1]).toMatchObject({ value: 'AccessKey', icon: 'quote', info: 'Access key to access amazon comprehend' });
-  expect(node.children[2]).toMatchObject({ value: 'Enum', icon: 'list', info: '' });
-  expect(node.children[3]).toMatchObject({ value: 'File', icon: 'note', info: '' });
+  expect(node?.children).toHaveLength(4);
+  expect(node?.children[0]).toMatchObject({ value: 'SecretKey', icon: 'password', info: 'Secret key to access amazon comprehend' });
+  expect(node?.children[1]).toMatchObject({ value: 'AccessKey', icon: 'quote', info: 'Access key to access amazon comprehend' });
+  expect(node?.children[2]).toMatchObject({ value: 'Enum', icon: 'list', info: '' });
+  expect(node?.children[3]).toMatchObject({ value: 'File', icon: 'note', info: '' });
 });
 
 describe('findVariable', () => {
@@ -86,12 +86,12 @@ describe('findVariable', () => {
   });
 
   test('find folder', () => {
-    expect(findVariable(knownVariables, 'Amazon', 'Comprehend')).toEqual({ node: knownVariables.children[0].children[0], path: [0, 0] });
+    expect(findVariable(knownVariables, 'Amazon', 'Comprehend')).toEqual({ node: knownVariables?.children[0]?.children[0], path: [0, 0] });
   });
 
   test('find leaf', () => {
     expect(findVariable(knownVariables, 'Amazon', 'Comprehend', 'AccessKey')).toEqual({
-      node: knownVariables.children[0].children[0].children[1],
+      node: knownVariables?.children[0]?.children[0]?.children[1],
       path: [0, 0, 1]
     });
   });
@@ -105,7 +105,7 @@ describe('addKnownVariable', () => {
   test('leaf', () => {
     const variables = [{ name: 'Variable' }] as Array<Variable>;
     const originalVariables = structuredClone(variables);
-    const addNodeReturnValue = addKnownVariable(variables, knownVariables.children[0].children[0].children[0]);
+    const addNodeReturnValue = addKnownVariable(variables, knownVariables!.children[0]!.children[0]!.children[0]!);
     const newData = addNodeReturnValue.newData;
     const newNodePath = addNodeReturnValue.newNodePath;
     expect(variables).toEqual(originalVariables);
@@ -142,7 +142,7 @@ describe('addKnownVariable', () => {
   test('folder', () => {
     const variables = [{ name: 'Variable' }] as Array<Variable>;
     const originalVariables = structuredClone(variables);
-    const addNodeReturnValue = addKnownVariable(variables, knownVariables.children[0].children[0]);
+    const addNodeReturnValue = addKnownVariable(variables, knownVariables!.children[0]!.children[0]!);
     const newData = addNodeReturnValue.newData;
     const newNodePath = addNodeReturnValue.newNodePath;
     expect(variables).toEqual(originalVariables);
@@ -203,7 +203,7 @@ describe('addKnownVariable', () => {
       { name: 'Amazon', children: [{ name: 'Comprehend', children: [] as Array<Variable> }] }
     ] as Array<Variable>;
     const originalVariables = structuredClone(variables);
-    const addNodeReturnValue = addKnownVariable(variables, knownVariables.children[0].children[0].children[0]);
+    const addNodeReturnValue = addKnownVariable(variables, knownVariables!.children[0]!.children[0]!.children[0]!);
     const newData = addNodeReturnValue.newData;
     const newNodePath = addNodeReturnValue.newNodePath;
     expect(variables).toEqual(originalVariables);
@@ -234,7 +234,7 @@ describe('addKnownVariable', () => {
   test('do not add existing variable', () => {
     const variables = [{ name: 'Amazon', children: [] as Array<Variable> }] as Array<Variable>;
     const originalVariables = structuredClone(variables);
-    const addNodeReturnValue = addKnownVariable(variables, knownVariables.children[0]);
+    const addNodeReturnValue = addKnownVariable(variables, knownVariables!.children[0]!);
     const newData = addNodeReturnValue.newData;
     const newNodePath = addNodeReturnValue.newNodePath;
     expect(variables).toEqual(originalVariables);

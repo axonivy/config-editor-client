@@ -52,11 +52,12 @@ export const addNode = <TNode extends TreeNode<TNode>>(
   if (key !== '') {
     for (const keyPart of key.split('.')) {
       const nextNodeIndex = currentChildren.findIndex(node => node.name === keyPart);
-      if (nextNodeIndex === -1) {
+      const nextNode = currentChildren[nextNodeIndex];
+      if (nextNode === undefined) {
         currentChildren = pushNewNode(currentChildren, treeNodeFactory(keyPart), newNodePath);
       } else {
         newNodePath.push(nextNodeIndex);
-        currentChildren = currentChildren[nextNodeIndex].children;
+        currentChildren = nextNode.children;
       }
     }
   }

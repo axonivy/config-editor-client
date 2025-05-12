@@ -45,7 +45,8 @@ export class Table {
 
   async expectToBeSelected(...indexes: Array<number>) {
     for (let i = 0; i < indexes.length; i++) {
-      await this.row(indexes[i]).expectSelected();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      await this.row(indexes[i]!).expectSelected();
     }
   }
   async expectToHaveNothingSelected() {
@@ -85,20 +86,23 @@ export class Row {
     for (let column = 0; column < this.columns.length; column++) {
       if (this.columns[column] !== 'label') {
         const cell = this.column(column);
-        await cell.fill(values[value++]);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await cell.fill(values[value++]!);
       }
     }
   }
 
   column(column: number) {
-    return new Cell(this.page, this.locator, column, this.columns[column]);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return new Cell(this.page, this.locator, column, this.columns[column]!);
   }
 
   async expectValues(values: string[]) {
     let value = 0;
     for (let column = 0; column < this.columns.length; column++) {
       const cell = this.column(column);
-      await cell.expectValue(values[value++]);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      await cell.expectValue(values[value++]!);
     }
   }
 

@@ -1,5 +1,5 @@
 {
-  "extends": "../../config/tsconfig.integration.json",
+  "extends": "@axonivy/ts-config/integration",
   "compilerOptions": {
     "types": ["vite/client", "node"],
     "jsx": "preserve",
@@ -9,7 +9,7 @@
   },
   "include": ["src"],
   "references": [
-    { "path": "../../packages/variable-editor/tsconfig.json" },
+    { "path": "../../packages/variable-editor/tsconfig.production.json" },
     { "path": "../../packages/protocol/tsconfig.json" }
   ]
 }

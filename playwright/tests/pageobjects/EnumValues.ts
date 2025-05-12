@@ -44,7 +44,8 @@ export class EnumValues {
   async expectValues(...values: Array<string>) {
     await this.table.expectRowCount(values.length);
     for (let row = 0; row < values.length; row++) {
-      await this.table.cell(row, 0).expectValue(values[row]);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      await this.table.cell(row, 0).expectValue(values[row]!);
     }
   }
 

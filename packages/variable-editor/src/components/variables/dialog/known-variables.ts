@@ -30,12 +30,15 @@ export const findVariable = <TNode extends TreeNode<TNode>>(node: TNode, ...key:
   const path = [];
   let currentNode: TNode | undefined = node;
   for (const part of key) {
-    const index: number = currentNode.children.findIndex(child => child.name === part);
-    if (index === -1) {
+    if (currentNode === undefined) {
+      return undefined;
+    }
+    const index = currentNode.children.findIndex(child => child.name === part);
+    currentNode = currentNode.children[index];
+    if (currentNode === undefined) {
       return undefined;
     }
     path.push(index);
-    currentNode = currentNode.children[index];
   }
   return { node: currentNode, path };
 };

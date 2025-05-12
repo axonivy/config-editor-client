@@ -18,7 +18,7 @@ describe('getNode', () => {
 
     test('deep', () => {
       const data = setupData();
-      expect(getNode(data, [1, 1, 0])).toEqual(data[1].children[1].children[0]);
+      expect(getNode(data, [1, 1, 0])).toEqual(data[1]?.children[1]?.children[0]);
     });
   });
 
@@ -53,8 +53,8 @@ describe('getNodesOnPath', () => {
     const nodesOnPath = getNodesOnPath(data, [1, 1, 0]);
     expect(nodesOnPath).toHaveLength(3);
     expect(nodesOnPath[0]).toEqual(data[1]);
-    expect(nodesOnPath[1]).toEqual(data[1].children[1]);
-    expect(nodesOnPath[2]).toEqual(data[1].children[1].children[0]);
+    expect(nodesOnPath[1]).toEqual(data[1]?.children[1]);
+    expect(nodesOnPath[2]).toEqual(data[1]?.children[1]?.children[0]);
   });
 
   test('missing', () => {
@@ -85,8 +85,8 @@ describe('updateNode', () => {
     const newData = updateNode(data, [1, 0], nodeUpdates);
     expect(data).toEqual(originalData);
     expect(newData).not.toBe(data);
-    expect(newData[1].children[0].name).toEqual('newName');
-    expect(newData[1].children[0].value).toEqual('newValue');
+    expect(newData[1]?.children[0]?.name).toEqual('newName');
+    expect(newData[1]?.children[0]?.value).toEqual('newValue');
   });
 
   test('missing', () => {
@@ -110,7 +110,7 @@ describe('addNode', () => {
     expect(newData).not.toBe(data);
     expect(newNodePath).toEqual([2]);
     expect(newData).toHaveLength(3);
-    expect(newData[2].name).toEqual('NewNode');
+    expect(newData[2]?.name).toEqual('NewNode');
   });
 
   test('addToExisting', () => {
@@ -122,8 +122,8 @@ describe('addNode', () => {
     expect(data).toEqual(originalData);
     expect(newData).not.toBe(data);
     expect(newNodePath).toEqual([1, 1, 1]);
-    expect(newData[1].children[1].children).toHaveLength(2);
-    expect(newData[1].children[1].children[1].name).toEqual('NewNode');
+    expect(newData[1]?.children[1].children).toHaveLength(2);
+    expect(newData[1]?.children[1].children[1].name).toEqual('NewNode');
   });
 
   test('completelyNew', () => {
@@ -136,11 +136,11 @@ describe('addNode', () => {
     expect(newData).not.toBe(data);
     expect(newNodePath).toEqual([2, 0, 0]);
     expect(newData).toHaveLength(3);
-    expect(newData[2].name).toEqual('New');
-    expect(newData[2].children).toHaveLength(1);
-    expect(newData[2].children[0].name).toEqual('Namespace');
-    expect(newData[2].children[0].children).toHaveLength(1);
-    expect(newData[2].children[0].children[0].name).toEqual('NewNode');
+    expect(newData[2]?.name).toEqual('New');
+    expect(newData[2]?.children).toHaveLength(1);
+    expect(newData[2]?.children[0]?.name).toEqual('Namespace');
+    expect(newData[2]?.children[0]?.children).toHaveLength(1);
+    expect(newData[2]?.children[0]?.children[0]?.name).toEqual('NewNode');
   });
 
   test('partiallyNew', () => {
@@ -152,12 +152,12 @@ describe('addNode', () => {
     expect(data).toEqual(originalData);
     expect(newData).not.toBe(data);
     expect(newNodePath).toEqual([1, 1, 1, 0, 0]);
-    expect(newData[1].children[1].children).toHaveLength(2);
-    expect(newData[1].children[1].children[1].name).toEqual('New');
-    expect(newData[1].children[1].children[1].children).toHaveLength(1);
-    expect(newData[1].children[1].children[1].children[0].name).toEqual('Namespace');
-    expect(newData[1].children[1].children[1].children[0].children).toHaveLength(1);
-    expect(newData[1].children[1].children[1].children[0].children[0].name).toEqual('NewNode');
+    expect(newData[1]?.children[1].children).toHaveLength(2);
+    expect(newData[1]?.children[1].children[1].name).toEqual('New');
+    expect(newData[1]?.children[1].children[1].children).toHaveLength(1);
+    expect(newData[1]?.children[1].children[1].children[0].name).toEqual('Namespace');
+    expect(newData[1]?.children[1].children[1].children[0].children).toHaveLength(1);
+    expect(newData[1]?.children[1].children[1].children[0].children[0].name).toEqual('NewNode');
   });
 });
 
@@ -179,7 +179,7 @@ describe('removeNode', () => {
       const newData = removeNode(data, [1, 1, 0]);
       expect(data).toEqual(originalData);
       expect(newData).not.toEqual(data);
-      expect(newData[1].children[1].children).toHaveLength(0);
+      expect(newData[1]?.children[1]?.children).toHaveLength(0);
     });
   });
 
@@ -196,11 +196,11 @@ describe('removeNode', () => {
 describe('hasChildren', () => {
   test('true', () => {
     const data = setupData();
-    expect(hasChildren(data[1])).toBeTruthy();
+    expect(hasChildren(data[1]!)).toBeTruthy();
   });
 
   test('false', () => {
     const data = setupData();
-    expect(hasChildren(data[0])).toBeFalsy();
+    expect(hasChildren(data[0]!)).toBeFalsy();
   });
 });

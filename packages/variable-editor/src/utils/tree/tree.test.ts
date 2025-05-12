@@ -79,8 +79,8 @@ describe('deleteFirstSelectedRow', () => {
         expect(data).toEqual(originalData);
         expect(newData).not.toBe(data);
         expect(selectedPath).toEqual([1, 0]);
-        expect(newData[1].children).toHaveLength(1);
-        expect(newData[1].children[0]).toEqual(originalData[1].children[1]);
+        expect(newData[1]?.children).toHaveLength(1);
+        expect(newData[1]?.children[0]).toEqual(originalData[1]?.children[1]);
         expect(onRowSelectionChangeValues).toEqual([{ '1.0': true }]);
       });
 
@@ -94,8 +94,8 @@ describe('deleteFirstSelectedRow', () => {
         expect(data).toEqual(originalData);
         expect(newData).not.toBe(data);
         expect(selectedPath).toEqual([1, 0]);
-        expect(newData[1].children).toHaveLength(1);
-        expect(newData[1].children[0]).toEqual(originalData[1].children[0]);
+        expect(newData[1]?.children).toHaveLength(1);
+        expect(newData[1]?.children[0]).toEqual(originalData[1]?.children[0]);
         expect(onRowSelectionChangeValues).toEqual([{ '1.0': true }]);
       });
 
@@ -109,7 +109,7 @@ describe('deleteFirstSelectedRow', () => {
         expect(data).toEqual(originalData);
         expect(newData).not.toBe(data);
         expect(selectedPath).toEqual([1, 1]);
-        expect(newData[1].children[1].children).toHaveLength(0);
+        expect(newData[1]?.children[1]?.children).toHaveLength(0);
         expect(onRowSelectionChangeValues).toEqual([{ '1.1': true }]);
       });
     });
@@ -196,12 +196,12 @@ describe('treeGlobalFilter', () => {
 describe('keyOfRow', () => {
   test('withoutParents', () => {
     const { table } = setupTable();
-    expect(keyOfRow(table.getRowModel().rows[0])).toEqual('NameNode0');
+    expect(keyOfRow(table.getRowModel().rows[0]!)).toEqual('NameNode0');
   });
 
   test('withParents', () => {
     const { table } = setupTable();
-    expect(keyOfRow(table.getRowModel().rows[1].getLeafRows()[1].getLeafRows()[0])).toEqual('NameNode1.NameNode11.NameNode110');
+    expect(keyOfRow(table.getRowModel().rows[1]!.getLeafRows()[1]!.getLeafRows()[0]!)).toEqual('NameNode1.NameNode11.NameNode110');
   });
 });
 
@@ -210,9 +210,9 @@ describe('newNodeName', () => {
     const { table } = setupTable();
     table.getState().rowSelection = {};
     expect(newNodeName(table, 'NewName')).toEqual('NewName');
-    table.getRowModel().rows[0].original.name = 'NewName';
+    table.getRowModel().rows[0]!.original.name = 'NewName';
     expect(newNodeName(table, 'NewName')).toEqual('NewName2');
-    table.getRowModel().rows[1].original.name = 'NewName2';
+    table.getRowModel().rows[1]!.original.name = 'NewName2';
     expect(newNodeName(table, 'NewName')).toEqual('NewName3');
   });
 
@@ -220,7 +220,7 @@ describe('newNodeName', () => {
     const { table } = setupTable();
     table.getState().rowSelection = { '1.1': true };
     expect(newNodeName(table, 'NewName')).toEqual('NewName');
-    table.getRowModel().rows[1].subRows[1].subRows[0].original.name = 'NewName';
+    table.getRowModel().rows[1]!.subRows[1]!.subRows[0]!.original.name = 'NewName';
     expect(newNodeName(table, 'NewName')).toEqual('NewName2');
   });
 
@@ -228,7 +228,7 @@ describe('newNodeName', () => {
     const { table } = setupTable();
     table.getState().rowSelection = { '0': true };
     expect(newNodeName(table, 'NewName')).toEqual('NewName');
-    table.getRowModel().rows[0].original.name = 'NewName';
+    table.getRowModel().rows[0]!.original.name = 'NewName';
     expect(newNodeName(table, 'NewName')).toEqual('NewName2');
   });
 

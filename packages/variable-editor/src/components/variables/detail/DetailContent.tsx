@@ -45,7 +45,8 @@ export const messageDataOfProperty = (validations: ValidationMessages, property:
     return { message: validationWarning.message, variant: 'warning' };
   }
   const validationOther = validationMatches[0];
-  return { message: validationOther.message, variant: 'info' };
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return { message: validationOther!.message, variant: 'info' };
 };
 
 export const VariablesDetailContent = () => {

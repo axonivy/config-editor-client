@@ -92,7 +92,7 @@ export const VariablesMasterContent = () => {
   const tableContainer = useRef<HTMLDivElement>(null);
   const virtualizer = useVirtualizer<HTMLDivElement, HTMLTableRowElement>({
     count: rows.length,
-    estimateSize: index => rowHeight(rows[index].original.validations),
+    estimateSize: index => rowHeight(rows[index]?.original.validations),
     getScrollElement: () => tableContainer.current,
     overscan: 20
   });
@@ -157,6 +157,7 @@ export const VariablesMasterContent = () => {
             <TableBody style={{ height: `${virtualizer.getTotalSize()}px` }} className='variables-editor-table-body'>
               {virtualizer.getVirtualItems().map(virtualRow => {
                 const row = rows[virtualRow.index];
+                if (row === undefined) return null;
                 return <ValidationRow key={row.id} row={row} virtualRow={virtualRow} />;
               })}
             </TableBody>

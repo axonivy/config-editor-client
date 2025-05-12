@@ -39,7 +39,8 @@ export const toVariables = (content: string) => {
   if (topLevelNodes.length !== 1) {
     return rootVariable;
   }
-  const variablesNode = topLevelNodes[0];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const variablesNode = topLevelNodes[0]!;
   if (variablesNode.key.value != 'Variables') {
     return rootVariable;
   }
@@ -58,11 +59,12 @@ export const toVariables = (content: string) => {
     return rootVariable;
   }
   const variables = variablesNodeValue.items;
-  if (variables.length === 0) {
+  const variable = variables[0];
+  if (variable === undefined) {
     return rootVariable;
   }
 
-  const firstVariableKey = variables[0].key;
+  const firstVariableKey = variable.key;
   if (isScalar(firstVariableKey)) {
     firstVariableKey.commentBefore = variablesNodeValue.commentBefore;
   }
@@ -109,7 +111,8 @@ const enrichVariableWithChildren = (variable: Variable, node: Pair<Scalar, YAMLM
   const nodeValue = node.value;
   if (isMap<Scalar, Pair>(nodeValue)) {
     const nodeValueItems = nodeValue.items;
-    nodeValueItems[0].key.commentBefore = nodeValue.commentBefore;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    nodeValueItems[0]!.key.commentBefore = nodeValue.commentBefore;
     variable.children = parseNodes(nodeValueItems);
   }
   return variable;

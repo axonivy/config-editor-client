@@ -9,6 +9,7 @@ import type {
 } from '@axonivy/variable-editor-protocol';
 import { validations, variables, virtualizedVariables } from './data';
 import { knownVariables } from './meta';
+import { Emitter } from '@axonivy/jsonrpc';
 
 export class VariablesClientMock implements Client {
   private variablesData: VariablesData = variables;
@@ -46,5 +47,5 @@ export class VariablesClientMock implements Client {
     console.log(`Action: ${JSON.stringify(action)}`);
   }
 
-  onDataChanged: Event<void>;
+  onDataChanged: Event<void> = new Emitter<void>().event;
 }
